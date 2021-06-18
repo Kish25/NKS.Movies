@@ -27,6 +27,9 @@
         {
             if (!movies.Duration.IsValidTimeFormat())
                 throw new FormatException("Duration is not in correct format.");
+            var metaData= TextFileProcessor.LoadFromTextFile<Metadata>(_options.MetadataFile);
+
+            metaData.Add(movies);
         }
 
         private static bool IsValidDuration(string duration)

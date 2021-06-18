@@ -60,16 +60,14 @@
         [HttpPost]
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(typeof(string), 400)]
-        public IActionResult Post([FromBody] MetadataRequest request)
+        public IActionResult Post([FromBody] Metadata request)
         {
 
             if (!ModelState.IsValid)
                 return BadRequest("content not valid");
             try
             {
-                //                var movie = _movieRepository.Create(request);
-                //              var url = $"{HttpContext.Request.Scheme}//{HttpContext.Request.Host}{HttpContext.Request.Path}/{movie.id}";
-                //                return Ok(url);
+                _movieRepository.Create(request);
                 return Ok("Some uri");
 
             }

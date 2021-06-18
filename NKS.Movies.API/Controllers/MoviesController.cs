@@ -19,6 +19,8 @@
         }
 
         [HttpGet("stats")]
+        [ProducesResponseType(typeof(string), 200)]
+
         public IActionResult GetStats()
         {
             var movie = _movieRepository.GetAllAsync()
@@ -57,10 +59,7 @@
                 .OrderByDescending(w=>w.Watches)
                 .ThenByDescending(r=>r.ReleaseYear);
 
-
             return Ok(combineResult);
         }
-
-        
     }
 }
