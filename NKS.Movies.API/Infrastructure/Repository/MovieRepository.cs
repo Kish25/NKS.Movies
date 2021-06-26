@@ -1,19 +1,14 @@
-﻿namespace NKS.Movies.API.Infrastructure.Repository
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.Linq;
-    using System.Runtime.CompilerServices;
-    using System.Threading.Tasks;
-    using Configuration;
-    using Contracts;
-    using Dapper;
-    using Extensions;
-    using File;
-    using Microsoft.Extensions.Options;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.Options;
+using NKS.Movies.API.Configuration;
+using NKS.Movies.API.Contracts;
+using NKS.Movies.API.Extensions;
+using NKS.Movies.API.Infrastructure.File;
 
+namespace NKS.Movies.API.Infrastructure.Repository
+{
     public class MovieRepository : IMovieRepository
     {
         private readonly MoviesConfiguration _options;

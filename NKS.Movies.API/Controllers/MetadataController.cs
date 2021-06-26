@@ -1,14 +1,12 @@
-﻿namespace NKS.Movies.API.Controllers
-{
-    using System;
-    using Microsoft.AspNetCore.Mvc;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Contracts;
-    using Serilog;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using NKS.Movies.API.Contracts;
+using Serilog;
 
+namespace NKS.Movies.API.Controllers
+{
     //[Authorize]
     [Route("[controller]")]
     [ApiController]
@@ -41,42 +39,44 @@
                 return NotFound($"Movie metadata does not exist for id={id}");
 
             var response = (from m in movie
-                            select new MetadataResponse()
-                            {
-                                MovieId = m.MovieId,
-                                Title = m.Title,
-                                Language = m.Language,
-                                Duration = m.Duration,
-                                ReleaseYear = m.ReleaseYear
-
-                            }).ToList();
+                select new MetadataResponse
+                {
+                    MovieId = m.MovieId,
+                    Title = m.Title,
+                    Language = m.Language,
+                    Duration = m.Duration,
+                    ReleaseYear = m.ReleaseYear
+                }).ToList();
             return Ok(response);
         }
 
         /// <summary>
-        /// adds new meta data about movie
+        ///     adds new meta data about movie
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="request"></param>
         [HttpPost]
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(typeof(string), 400)]
-        public IActionResult Post([FromBody] Metadata request)
+        public IActionResult Post([FromBody] MetadataRequest request)
         {
-
-            if (!ModelState.IsValid)
-                return BadRequest("content not valid");
             try
             {
-                _movieRepository.Create(request);
+                var domainRequest = new Metadata
+                {
+                    MovieId = request.MovieId,
+                    Title = request.Title,
+                    Language = request.Language,
+                    Duration = request.Duration,
+                    ReleaseYear = request.ReleaseYear
+                };
+                _movieRepository.Create(domainRequest);
                 return Ok("Some uri");
-
             }
             catch (Exception e)
             {
                 Log.Logger.Error(e.Message);
                 return BadRequest(e.Message);
             }
-
         }
     }
 }

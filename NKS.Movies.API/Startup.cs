@@ -1,12 +1,12 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using NKS.Movies.API.Configuration;
+
 namespace NKS.Movies.API
 {
-    using Configuration;
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
-
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -19,7 +19,7 @@ namespace NKS.Movies.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApiConfiguration(Configuration);            
+            services.AddApiConfiguration(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -30,7 +30,8 @@ namespace NKS.Movies.API
                 app.UseDeveloperExceptionPage();
             }
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint($"/swagger/v{swaggerConfig.Version}/swagger.json", "API v1"));
+            app.UseSwaggerUI(c => 
+                c.SwaggerEndpoint($"/swagger/v{swaggerConfig.Version}/swagger.json", "API v1"));
             app.UseAuthentication();
 
             app.UseHttpsRedirection();

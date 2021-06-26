@@ -1,18 +1,19 @@
-﻿namespace NKS.Movies.API.Configuration
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
+using System.Reflection;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
+using NKS.Movies.API.Handlers;
+using NKS.Movies.API.Infrastructure.Repository;
+using NKS.Movies.API.Service;
+
+namespace NKS.Movies.API.Configuration
 {
-    using Handlers;
-    using Infrastructure.Repository;
-    using Microsoft.AspNetCore.Authentication;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.OpenApi.Models;
-    using Service;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Data.SqlClient;
-    using System.IO;
-    using System.Reflection;
     public static class Dependencies
     {
         public static IServiceCollection AddApiConfiguration(this IServiceCollection services, IConfiguration config)
@@ -20,15 +21,16 @@
             var swaggerConfig = config.GetSection("SwaggerConfiguration").Get<Swagger>();
             services.Configure<MoviesConfiguration>(config.GetSection(nameof(MoviesConfiguration)));
 
+            services.AddControllers();
             services.AddMvcCore();
             services.AddTransient<IDbConnection>(sp => GetDbConnection(config["ConnectionStrings:MoviesDatabase"]));
 
             services.AddScoped<IUserService, UserService>()
-                    .AddTransient<IMovieRepository,MovieRepository>();
+                .AddTransient<IMovieRepository, MovieRepository>();
+
             services.AddAuthentication("BasicAuthentication")
                     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
-            services.AddControllers();
 
             services.AddSwaggerGen(options =>
             {
